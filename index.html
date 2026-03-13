@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Siswa</title>
+</head>
+<body>
+
+  <h2>Input Data Siswa</h2>
+
+  <input type="text" id="nama" placeholder="Masukan Nama"><br>
+  <input type="text" id="rombel" placeholder="Masukan Rombel"><br>
+  <input type="number" id="nilai" placeholder="Masukan Nilai"><br>
+
+  <button onclick="tombolAksi()" id="tombol">Tambahkan</button>
+  <button onclick="tombolAksi2()" id="tombol2">Membaca</button>
+
+  <h2>Daftar Siswa</h2>
+  <div id="tabel"></div>
+
+  <script>
+
+    let data = [];
+    let indexEdit = -1;
+
+    function hitungNilai(nilai) {
+
+      let grade = "";
+      let status = "";
+
+      if (nilai >= 90) {
+        grade = "A";
+      }else if (nilai >= 80) {
+        grade = "B";
+      }else if (nilai >= 75) {
+        grade = "C";
+      }else if (nilai >= 60) {
+        grade = "D";
+      } else {
+        grade = "E";
+      }
+
+      if (nilai >= 75) {
+        status = "Lulus";
+      } else {
+        status = "Tidak Lulus";
+      }
+
+      return {
+        grade: grade,
+        status: status
+      };
+    }
+
+
+    function tombolAksi() {
+
+      let nama = document.getElementById("nama").value;
+      let rombel = document.getElementById("rombel").value;
+      let nilai = Number(document.getElementById("nilai").value);
+
+      let hasil = hitungNilai(nilai);
+
+      if (indexEdit === -1) {
+
+        data.push({
+          nama: nama,
+          rombel: rombel,
+          nilai: nilai,
+          grade: hasil.grade,
+          status: hasil.status
+        });
+
+      } else {
+
+        data[indexEdit] = {
+          nama: nama,
+          rombel: rombel,
+          nilai: nilai,
+          grade: hasil.grade,
+          status: hasil.status
+        };
+
+        indexEdit = -1;
+        document.getElementById("tombol").innerText = "Tambahkan";
+      }
+
+      kosongkan();
+      tampil();
+    }
+
+    function tombolAksi2() {
+
+      if (data.length > 0) {
+        alert("Data terbaca");
+      } else {
+        alert("Data tidak ada");
+      }
+
+    }
+
+    function tampil() {
+
+      let isi = "";
+
+      for (let i = 0; i < data.length; i++) {
+
+        isi += `
+          Nama : ${data[i].nama} <br>
+          Rombel : ${data[i].rombel} <br>
+          Nilai : ${data[i].nilai} <br>
+          Grade : ${data[i].grade} <br>
+          Status : ${data[i].status} <br>
+
+          <button onclick="edit(${i})">Edit</button>
+          <button onclick="hapus(${i})">Delete</button>
+          <hr>
+        `;
+      }
+
+      document.getElementById("tabel").innerHTML = isi;
+    }
+
+
+    function hapus(index) {
+      data.splice(index, 1);
+      tampil();
+    }
+
+
+    function edit(index) {
+
+      document.getElementById("nama").value = data[index].nama;
+      document.getElementById("rombel").value = data[index].rombel;
+      document.getElementById("nilai").value = data[index].nilai;
+
+      indexEdit = index;
+
+      document.getElementById("tombol").innerText = "Update";
+    }
+
+
+    function kosongkan() {
+      document.getElementById("nama").value = "";
+      document.getElementById("rombel").value = "";
+      document.getElementById("nilai").value = "";
+    }
+
+  </script>
+
+</body>
+</html>
